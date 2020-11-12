@@ -7,13 +7,15 @@ public class Listaligada {
 	private int totalDeElementos;
 	
 	public void adicionaNoComeco(Object elemento) {
-		Celula nova = new Celula(elemento, primeira);
-		this.primeira = nova;
-		
 		if (this.totalDeElementos == 0) {
-			this.ultima = this.primeira;
+			Celula nova = new Celula(elemento);
+			this.primeira = nova;
+			this.ultima = nova;
+		} else {
+			Celula nova = new Celula(this.primeira, elemento);
+			this.primeira.setAnterior(nova);
+			this.primeira = nova;
 		}
-		
 		this.totalDeElementos++;
 	}
 	
@@ -42,8 +44,9 @@ public class Listaligada {
 		if (this.totalDeElementos == 0) {
 			adicionaNoComeco(elemento);
 		} else {
-			Celula nova = new Celula(elemento, null);
+			Celula nova = new Celula(elemento);
 			this.ultima.setProxima(nova);
+			nova.setAnterior(this.ultima);
 			this.ultima = nova;
 			this.totalDeElementos++;
 		}
@@ -76,14 +79,29 @@ public class Listaligada {
 			adiciona(elemento);
 		} else {
 			Celula anterior = this.pegaCelula(posicao - 1);
-			Celula nova = new Celula(elemento, anterior.getProxima());
+			Celula proxima = anterior.getProxima();
+			
+			Celula nova = new Celula(anterior.getProxima(), elemento);
+			nova.setAnterior(anterior);
 			anterior.setProxima(nova);
+			proxima.setAnterior(nova);
 			this.totalDeElementos++;
 		}
 	}
 	
 	public Object pega(int posicao) {
 		return this.pegaCelula(posicao).getElemento();
+	}
+	
+	public void removeDoFim() {
+		if (this.totalDeElementos == 1) {
+			this.removeDoComeco();
+		} else {
+			Celula penultima = this.ultima.getAnterior();
+			penultima.setProxima(null);
+			this.ultima = penultima;
+			this.totalDeElementos--;
+		}
 	}
 	
 	public void removeDoComeco() {
@@ -100,10 +118,37 @@ public class Listaligada {
 		
 	}
 	
-	public void remove(int posicao) {}
+	public void remove(int posicao) {
+		if (posicao == 0) {
+			this.removeDoComeco();
+		} else if (posicao == this.totalDeElementos - 1) {
+			this.removeDoFim();
+		} else {
+			Celula anterior = this.pegaCelula(posicao - 1);
+			Celula atual = anterior.getProxima();
+			Celula proxima = atual.getProxima();
+			
+			anterior.setProxima(proxima);
+			proxima.setAnterior(anterior);
+			
+			this.totalDeElementos--;
+		}
+	}
 	public int tamanho() {
 		return this.totalDeElementos;
 	}
 	
-	public boolean contem(Object o) { return false; }
+	public boolean contem(Object elemento) {
+		Celula atual = this.primeira;
+		
+		while (atual != null) {
+			if (atual.getElemento().equals(elemento)) {
+				return true;
+			}
+			
+			atual = atual.getProxima();
+		}
+		
+		return false;
+	}
 }

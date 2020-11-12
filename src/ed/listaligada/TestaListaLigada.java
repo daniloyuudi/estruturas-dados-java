@@ -28,6 +28,21 @@ public class TestaListaLigada {
 		
 		System.out.println(lista);
 		System.out.println(lista.tamanho());
+		
+		lista.removeDoFim();
+		System.out.println(lista);
+		
+		lista.adiciona("Jose");
+		lista.adiciona("Joao");
+		
+		System.out.println(lista);
+		
+		lista.remove(1);
+		
+		System.out.println(lista);
+		
+		System.out.println(lista.contem("mauricio"));
+		System.out.println(lista.contem("Danilo"));
 	}
 	
 }
