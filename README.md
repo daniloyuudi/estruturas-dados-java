@@ -1,4 +1,4 @@
-# estrutura-dados-java
+# estruturas-dados-java
 Implementação de estruturas de dados em Java usando a IDE Eclipse.
 
 ## Conteúdo:
